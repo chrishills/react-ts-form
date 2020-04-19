@@ -35,5 +35,12 @@ class SignUpFormData {
   public email: string;
 
 }
+
+import { Form } from "react-ts-form";
+import * as meta from "./my-form-templates";
+
+function SignUpForm({onChange, value}) {
+  return <Form clazz={SignUpFormData} value={value} onChange={onChange} meta={meta} />
+}
 ```
 
