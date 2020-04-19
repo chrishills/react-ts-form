@@ -3,7 +3,7 @@ import { META_KEY } from "../util/Constants";
 import { IInputProps } from "./IInputProps";
 
 export function Input<T, P extends IInputProps<T>>(args: IInputArgs<T, P>) {
-  return (clazz: object, property: string) => {
+  return (clazz: any, property: string) => {
     if (!clazz[META_KEY] || typeof clazz[META_KEY] !== 'object') {
       clazz[META_KEY] = {};
     }
@@ -15,4 +15,4 @@ export function Input<T, P extends IInputProps<T>>(args: IInputArgs<T, P>) {
   }
 }
 
-Input.getInputs = (o: object): (IInputArgs<any, any> & {property: string;})[] => o[META_KEY] && o[META_KEY].inputs || [];
+Input.getInputs = (o: any): (IInputArgs<any, any> & {property: string;})[] => o[META_KEY] && o[META_KEY].inputs || [];

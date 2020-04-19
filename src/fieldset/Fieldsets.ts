@@ -13,4 +13,4 @@ export function Fieldsets(fieldsets: IFieldset[]) {
     clazz[META_KEY].fieldsets = fieldsets;
   }
 }
-Fieldsets.getFieldsets = (o: object): IFieldset[] => o[META_KEY] && o[META_KEY].fieldsets || [];
+Fieldsets.getFieldsets = (o: any): IFieldset[] => o[META_KEY] && o[META_KEY].fieldsets || [];

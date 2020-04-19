@@ -1,14 +1,14 @@
 import * as React from "react";
 
 import { Fieldsets } from "../fieldset/Fieldsets";
-import { Input } from "input/Input";
-import { IInputArgs } from "input/IInputArgs";
-import Class from "util/Class";
+import { Input } from "../input/Input";
+import { IInputArgs } from "../input/IInputArgs";
+import Class from "../util/Class";
 import { IFormMeta } from "./IFormMeta";
 import { IFormProps } from "./IFormProps";
-import { IInputProps } from "input/IInputProps";
-import { IKeyedValue } from "util/IKeyedValue";
-import { arrayMove } from "util/ArrayUtil";
+import { IInputProps } from "../input/IInputProps";
+import { IKeyedValue } from "../util/IKeyedValue";
+import { arrayMove } from "../util/ArrayUtil";
 
 function renderInput<T extends object>(
   input: IInputArgs<any, any> & { property: string; },
@@ -17,7 +17,7 @@ function renderInput<T extends object>(
   onChange: (value: T) => void,
   key: React.Key,
   useTemplate: boolean
-) {
+): React.ReactNode {
   let content = null;
   const inputMeta = typeof input.meta === 'function' ? input.meta(value) : input.meta || {};
 
@@ -184,8 +184,10 @@ class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<T>, IArrayWrapp
     return retval;
   }
 
-  private onAdd = (value: T) => {
-    this.handleChange([...this.state.keyed, {key: ArrayWrapper.newKey(), value}]);
+  private onAdd = (newValues: T[]) => {
+    if (Array.isArray(newValues) && newValues.length > 0) {
+      this.handleChange([...this.state.keyed, ...newValues.map((value) => ({key: ArrayWrapper.newKey(), value}))]);
+    }
   }
 
   private getSortHandler = (index: number, newIndex: number) => () => {

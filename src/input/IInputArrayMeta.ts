@@ -1,7 +1,7 @@
 
 interface IAddComponentProps<T> {
   readonly values: T[];
-  onAdd: (newItem: T) => void;
+  onAdd: (newValues: T[]) => void;
 }
 
 export interface IInputArrayMeta<T> {

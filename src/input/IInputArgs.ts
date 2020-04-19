@@ -2,7 +2,7 @@ import { IInputProps } from "./IInputProps";
 import Class from "../util/Class";
 import { IInputMeta } from "./IInputMeta";
 import { IInputArrayMeta } from "./IInputArrayMeta";
-import { ExcludeKeys } from "util/ExcludeKeys";
+import { ExcludeKeys } from "../util/ExcludeKeys";
 
 export interface IInputArgs<T, P extends IInputProps<T>> {
   component?: React.ComponentType<P>;
