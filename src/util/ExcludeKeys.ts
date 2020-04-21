@@ -2,6 +2,4 @@
 /**
  * mapped type excluding specific keys
  */
-export type ExcludeKeys<T, E> = {
-  [K in keyof T]: K extends E ? never : T[K];
-};
+export type ExcludeKeys<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
