@@ -2,7 +2,7 @@ import { IInputMeta } from "../input/IInputMeta";
 
 // tslint:disable-next-line:no-empty-interface
 export interface IInputTemplateProps extends IInputMeta {
-
+  children?: React.ReactChild
 }
 
 export interface IArrayItemTemplateProps {
@@ -12,6 +12,7 @@ export interface IArrayItemTemplateProps {
   sortUp: () => void;
   sortDown: () => void;
   remove: () => void;
+  children?: React.ReactNode
 }
 
 export interface IFieldsetTemplate {
