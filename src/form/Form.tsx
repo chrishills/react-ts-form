@@ -10,7 +10,7 @@ import { IInputProps } from "../input/IInputProps";
 import { IKeyedValue } from "../util/IKeyedValue";
 import { arrayMove } from "../util/ArrayUtil";
 
-function renderInput<T extends object>(
+function renderInput<T>(
   input: IInputArgs<any, any> & { property: string; },
   meta: IFormMeta,
   value: T,
@@ -29,8 +29,8 @@ function renderInput<T extends object>(
     content = React.createElement(
       ArrayWrapper,
       {
-        value: value as T[],
-        onChange: onChange as (value: T[]) => void,
+        value: (value as unknown) as T[],
+        onChange: (onChange as unknown) as (value: T[]) => void,
         input,
         meta
       }
@@ -83,6 +83,8 @@ function renderForm<T extends object>(clazz: Class<T>, meta: IFormMeta, onChange
   const rendered = [];
   const retval = [];
 
+  const safeValue = (value || {}) as any;
+
   for (let i = 0; i < inputs.length; i++) {
     const input = inputs[i];
 
@@ -96,7 +98,7 @@ function renderForm<T extends object>(clazz: Class<T>, meta: IFormMeta, onChange
         const fieldsetInputs = [];
         for (let i1 = i; i1 < inputs.length; i1++) {
           const input1 = inputs[i1];
-          const e = renderInput(input1, meta, value, onChange, input.property, true);
+          const e = renderInput(input1, meta, safeValue[input1.property], (v) => onChange({...safeValue, [input1.property]: v}), input.property, true);
           if (e) {
             fieldsetInputs.push(e);
           }
@@ -107,7 +109,7 @@ function renderForm<T extends object>(clazz: Class<T>, meta: IFormMeta, onChange
       }
     }
 
-    const el = renderInput(input, meta, value, onChange, input.property, true);
+    const el = renderInput(input, meta, safeValue[input.property], (v) => onChange({...safeValue, [input.property]: v}), input.property, true);
     if (el) {
       retval.push(el);
     }
