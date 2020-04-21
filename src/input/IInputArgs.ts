@@ -11,5 +11,5 @@ export interface IInputArgs<T, P extends IInputProps<T>> {
   array?: IInputArrayMeta<T>;
   fieldset?: string;
   order?: number;
-  inputProps?: ExcludeKeys<P, IInputArgs<T, P>>;
+  inputProps?: ExcludeKeys<P, IInputProps<T>>;
 }
