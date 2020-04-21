@@ -217,6 +217,6 @@ class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<T>, IArrayWrapp
   private static newKey() { return this._key++; }
 }
 
-export function Form<T extends object>(props: IFormProps<T>): React.ReactNode {
-  return renderForm(props.clazz, props.meta, props.onChange, props.value);
+export function Form<T extends object>(props: IFormProps<T>): React.ReactElement {
+  return React.createElement(React.Fragment, {}, renderForm(props.clazz, props.meta, props.onChange, props.value));
 }
