@@ -1,5 +1,6 @@
 import IInputProps from "./IInputProps";
 import IInputArgs from "./IInputArgs";
+import IInputContext from "./IInputContext";
 
 export default interface IInput<P extends IInputProps<T>, T = P["value"]> {
 
@@ -11,6 +12,6 @@ export default interface IInput<P extends IInputProps<T>, T = P["value"]> {
     /**
      * literal input args or resolver function
      */
-    args: IInputArgs<P, T> | ((value: T, rootData: any, context: any) => IInputArgs<P, T>);
+    args: IInputArgs<P, T> | ((value: T, context: IInputContext) => IInputArgs<P, T>);
 
 }

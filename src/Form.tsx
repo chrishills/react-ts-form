@@ -61,7 +61,7 @@ function renderInput<T, C>(
 function renderInputs<T, C>(
     meta: IFormMeta, // templates
     context: C, // context value
-    rootValue: T, // root form value
+    root: T, // root form value
     value: any, // object value
     onChange: (value: any) => void,
     inputs?: (IInput<any>)[],
@@ -96,7 +96,7 @@ function renderInputs<T, C>(
         }
 
         // compute input args
-        const args = typeof input.args === 'function' ? input.args(safeValue[property], value, context) : input.args;
+        const args = typeof input.args === 'function' ? input.args(safeValue[property], { context, parent: safeValue, root }) : input.args;
 
         const handleChange = (next: any) => onChange({...safeValue, [property]: next});
 
@@ -109,11 +109,11 @@ function renderInputs<T, C>(
                     arrayItemTemplate={meta.arrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
-                    renderInput={(itemValue, itemOnChange) => renderInput(meta, context, rootValue, itemValue, itemOnChange, args)}
+                    renderInput={(itemValue, itemOnChange) => renderInput(meta, context, root, itemValue, itemOnChange, args)}
                 />
             );
         } else {
-            element = renderInput(meta, context, rootValue, safeValue[property], handleChange, args);
+            element = renderInput(meta, context, root, safeValue[property], handleChange, args);
         }
 
         rendered.push(property);
