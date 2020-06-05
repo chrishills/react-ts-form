@@ -4,8 +4,8 @@ interface IAddComponentProps<T> {
   onAdd: (newValues: T[]) => void;
 }
 
-export interface IInputArrayMeta<T> {
+export default interface IInputArrayMeta<T> {
   sort?: boolean;
   remove?: boolean;
-  addComponent?: React.Component<IAddComponentProps<T>>;
+  addComponent?: React.ComponentType<IAddComponentProps<T>>;
 }

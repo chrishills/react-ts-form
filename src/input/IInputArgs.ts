@@ -1,15 +1,28 @@
-import { IInputProps } from "./IInputProps";
+import IInputProps from "./IInputProps";
 import Class from "../util/Class";
-import { IInputMeta } from "./IInputMeta";
-import { IInputArrayMeta } from "./IInputArrayMeta";
+import IInputMeta from "./IInputMeta";
+import IInputArrayMeta from "./IInputArrayMeta";
+import IInput from "./IInput";
 import { ExcludeKeys } from "../util/ExcludeKeys";
 
-export interface IInputArgs<T, P extends IInputProps<T>> {
-  component?: React.ComponentType<P>;
+/**
+ * args for Input decorator. converted to {@link IInput} format 
+ * internally in {@link Form}.
+ */
+export default interface IInputArgs<P extends IInputProps<T>, T = P["value"]> {
+
   clazz?: Class<T>;
-  meta?: IInputMeta | ((value: T) => IInputMeta);
-  array?: IInputArrayMeta<T>;
-  fieldset?: string;
-  order?: number;
+
+  inputs?: (IInput<any>)[];
+
+  component?: React.ComponentType<P>;
+
   inputProps?: ExcludeKeys<P, keyof IInputProps<T>>;
+
+  meta?: IInputMeta;
+
+  array?: IInputArrayMeta<T>;
+  
+  fieldset?: string;
+
 }

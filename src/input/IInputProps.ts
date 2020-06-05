@@ -1,6 +1,9 @@
-import { IInputMeta } from "./IInputMeta";
+import IInputMeta from "./IInputMeta";
 import { IControlledProps } from "./IControlledProps";
 
-export interface IInputProps<T> extends IInputMeta, IControlledProps<T> {
+/**
+ * base props for an input component
+ */
+export default interface IInputProps<T> extends IInputMeta, IControlledProps<T> {
 
 }
