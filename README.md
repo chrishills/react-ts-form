@@ -15,7 +15,7 @@ class SignUpFormData {
   })
   public name: string;
 
-  @Input({
+  @Input((value) => ({
     component: TextInput,
     meta: (value) => {
 
@@ -31,7 +31,7 @@ class SignUpFormData {
 
       return meta;
     }
-  })
+  }))
   public email: string;
 
 }

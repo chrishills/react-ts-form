@@ -32,6 +32,11 @@ interface IFormProps<T = any, C = any> extends IControlledProps<T> {
      */
     meta: IFormMeta;
 
+    /**
+     * html id prefix for auto-generated component input ids.
+     */
+    idPrefix?: string;
+
 }
 
 function renderInput<T, C>(
@@ -40,19 +45,20 @@ function renderInput<T, C>(
     rootValue: T, // root value
     value: any,
     onChange: (value: any) => void,
-    args: IInputArgs<any>
+    args: IInputArgs<any>,
+    id?: string
 ) {
     
     let element = null;
 
     // input component
     if (args.component) {
-        element = React.createElement(args.component, {...args.meta || {}, onChange, value});
+        element = React.createElement(args.component, {...args.meta || {}, id, onChange, value});
     }
 
     // nested object form
     if (!element) {
-        element = renderInputs(meta, context, rootValue, value, onChange, args.inputs, args.clazz);
+        element = renderInputs(meta, context, rootValue, value, onChange, args.inputs, args.clazz, id);
     }
 
     return element;
@@ -65,7 +71,8 @@ function renderInputs<T, C>(
     value: any, // object value
     onChange: (value: any) => void,
     inputs?: (IInput<any>)[],
-    clazz?: Class<any>
+    clazz?: Class<any>,
+    idPrefix?: string
 ) {
 
     // todo support with non-decorator format
@@ -82,7 +89,7 @@ function renderInputs<T, C>(
     }
 
     const rendered: string[] = [];
-    const elements: React.ReactNodeArray = [];
+    const elements: ({ fieldset?: IFieldset; elements: React.ReactNodeArray })[] = [];
     const safeValue = value || {};
 
     for (let i = 0; i < inputs.length; i++) {
@@ -100,6 +107,8 @@ function renderInputs<T, C>(
 
         const handleChange = (next: any) => onChange({...safeValue, [property]: next});
 
+        const id = idPrefix ? `${idPrefix}_${property}` : undefined;
+
         let element = null;
         
         if (args.array) {
@@ -109,11 +118,11 @@ function renderInputs<T, C>(
                     arrayItemTemplate={meta.arrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
-                    renderInput={(itemValue, itemOnChange) => renderInput(meta, context, root, itemValue, itemOnChange, args)}
+                    renderInput={(itemValue, itemOnChange, index) => renderInput(meta, context, root, itemValue, itemOnChange, args, id ? `${id}_${index}` : undefined)}
                 />
             );
         } else {
-            element = renderInput(meta, context, root, safeValue[property], handleChange, args);
+            element = renderInput(meta, context, root, safeValue[property], handleChange, args, id);
         }
 
         rendered.push(property);
@@ -123,23 +132,37 @@ function renderInputs<T, C>(
         }
 
         // wrap with input template
-        element = React.createElement(meta.inputTemplate, {...args.meta || {}, key: property}, element);
+        element = React.createElement(meta.inputTemplate, {...args.meta || {}, labelFor: id, key: property}, element);
 
-        // TODO add to fieldset here if relevant
+        if (args.fieldset) {
+            let fieldsetWrapper = elements.find(e => e.fieldset && e.fieldset.name === args.fieldset);
+            if (!fieldsetWrapper) {
+                const fs = fieldsets.find(s => s.name === args.fieldset);
+                elements.push(fieldsetWrapper = { fieldset: fs || { name: args.fieldset, title: args.fieldset }, elements: [] });
+            }
+            fieldsetWrapper.elements.push(element);
+            continue;
+        }
 
-        elements.push(element);
+        elements.push({ elements: [element] });
     }
 
-    return elements;
+    return elements.reduce((a, c) => {
+        if (c.fieldset) {
+            a.push(React.createElement(meta.fieldsetTemplate, {...c.fieldset, key: `fieldset.${c.fieldset.name}`}, c.elements));
+            return a;
+        }
+        return a.concat(c.elements);
+    }, []);
 }
 
 export default function Form<T = any, C = any>(props: IFormProps<T, C>) {
 
-    const { clazz, context = {}, inputs, meta, onChange, value } = props;
+    const { clazz, context = {}, idPrefix, inputs, meta, onChange, value } = props;
 
     return (
         <React.Fragment>
-            {renderInputs(meta, context, value, value, onChange, inputs, clazz)}
+            {renderInputs(meta, context, value, value, onChange, inputs, clazz, idPrefix)}
         </React.Fragment>
     );
 }

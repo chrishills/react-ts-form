@@ -4,6 +4,7 @@ import IFieldset from "../fieldset/IFieldset";
 // tslint:disable-next-line:no-empty-interface
 export interface IInputTemplateProps extends IInputMeta {
   children?: React.ReactChild
+  labelFor?: string;
 }
 
 export interface IArrayItemTemplateProps {

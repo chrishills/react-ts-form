@@ -9,7 +9,7 @@ import IInputArrayMeta from "./input/IInputArrayMeta";
 interface IArrayWrapperProps<T> extends IControlledProps<T[]> {
     array: IInputArrayMeta<T>;
     arrayItemTemplate: React.ComponentType<IArrayItemTemplateProps>;
-    renderInput(value: T, onChange: (value: T) => void): React.ReactNode;
+    renderInput(value: T, onChange: (value: T) => void, index: number): React.ReactNode;
 }
 
 interface IArrayWrapperState<T> {
@@ -51,7 +51,7 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
                     sortDown: this.getSortHandler(i, canSortDown ? i + 1 : arr.length - 1),
                     key
                 },
-                renderInput(value, this.getChangeHandler(key))
+                renderInput(value, this.getChangeHandler(key), i)
             ));
         });
 
