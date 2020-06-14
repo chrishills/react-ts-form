@@ -1,7 +1,6 @@
 import IInputArgs from "./IInputArgs";
 import { META_KEY } from "../util/Constants";
 import IInputProps from "./IInputProps";
-import IInput from "./IInput";
 
 export function Input<P extends IInputProps<T>, T = P["value"]>(args: IInputArgs<P, T> | ((value: T, rootData: any, context: any) => IInputArgs<P, T>)) {
   return (clazz: any, property: string) => {
@@ -17,5 +16,3 @@ export function Input<P extends IInputProps<T>, T = P["value"]>(args: IInputArgs
     clazz[META_KEY].inputs.push({args, property});
   }
 }
-
-Input.getInputs = (o: any) => (o[META_KEY] && o[META_KEY].inputs || []) as (IInput<any>)[];

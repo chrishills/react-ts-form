@@ -9,6 +9,7 @@ import { Input } from "./input/Input";
 import Fieldsets from "./fieldset/Fieldsets";
 import IInputArgs from "./input/IInputArgs";
 import ArrayWrapper from "./ArrayWrapper";
+import { META_KEY } from "./util/Constants";
 
 interface IFormProps<T = any, C = any> extends IControlledProps<T> {
 
@@ -80,8 +81,8 @@ function renderInputs<T, C>(
 
     if (!inputs && clazz) {
         const instance = new clazz();
-        inputs = Input.getInputs(instance);
-        fieldsets = Fieldsets.getFieldsets(instance);
+        inputs = instance[META_KEY] && instance[META_KEY].inputs || [];
+        fieldsets = instance[META_KEY] && instance[META_KEY].fieldsets || [];
     }
 
     if (!inputs || !inputs.length) {

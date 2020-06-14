@@ -1,6 +1,6 @@
 {
-  "name": "react-decorator-input",
-  "version": "0.2.2",
+  "name": "react-ts-form",
+  "version": "0.2.3",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
