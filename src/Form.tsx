@@ -133,7 +133,7 @@ function renderInputs<T, C>(
         }
 
         // wrap with input template
-        element = React.createElement(meta.inputTemplate, {...args.meta || {}, labelFor: id, key: property}, element);
+        element = React.createElement(meta.inputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property}, element);
 
         if (args.fieldset) {
             let fieldsetWrapper = elements.find(e => e.fieldset && e.fieldset.name === args.fieldset);
