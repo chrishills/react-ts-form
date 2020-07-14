@@ -54,7 +54,7 @@ function renderInput<T, C>(
 
     // input component
     if (args.component) {
-        element = React.createElement(args.component, {...args.meta || {}, id, onChange, value});
+        element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value});
     }
 
     // nested object form
