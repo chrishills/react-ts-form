@@ -5,8 +5,6 @@ import IInput from "./input/IInput";
 import { IControlledProps } from "./input/IControlledProps";
 import { IFormMeta } from "./form/IFormMeta";
 import IFieldset from "./fieldset/IFieldset";
-import { Input } from "./input/Input";
-import Fieldsets from "./fieldset/Fieldsets";
 import IInputArgs from "./input/IInputArgs";
 import ArrayWrapper from "./ArrayWrapper";
 import { META_KEY } from "./util/Constants";
@@ -92,6 +90,7 @@ function renderInputs<T, C>(
     const rendered: string[] = [];
     const elements: ({ fieldset?: IFieldset; elements: React.ReactNodeArray })[] = [];
     const safeValue = value || {};
+    const ctx = { context, parent: safeValue, root };
 
     for (let i = 0; i < inputs.length; i++) {
 
@@ -104,7 +103,12 @@ function renderInputs<T, C>(
         }
 
         // compute input args
-        const args = typeof input.args === 'function' ? input.args(safeValue[property], { context, parent: safeValue, root }) : input.args;
+        const args = typeof input.args === 'function' ? input.args(safeValue[property], ctx) : input.args;
+
+        // if args function returned a falsey value, skip this input
+        if (!args || args.exclude(safeValue[property], ctx)) {
+            continue;
+        }
 
         const handleChange = (next: any) => onChange({...safeValue, [property]: next});
 

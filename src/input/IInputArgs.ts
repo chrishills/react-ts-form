@@ -4,6 +4,7 @@ import IInputMeta from "./IInputMeta";
 import IInputArrayMeta from "./IInputArrayMeta";
 import IInput from "./IInput";
 import { ExcludeKeys } from "../util/ExcludeKeys";
+import { ContextualResolver } from "./Input";
 
 /**
  * args for Input decorator. converted to {@link IInput} format 
@@ -24,5 +25,7 @@ export default interface IInputArgs<P extends IInputProps<T>, T = P["value"]> {
   array?: IInputArrayMeta<T>;
   
   fieldset?: string;
+
+  exclude?: ContextualResolver<T, boolean>;
 
 }
