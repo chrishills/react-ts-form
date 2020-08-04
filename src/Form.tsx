@@ -106,7 +106,7 @@ function renderInputs<T, C>(
         const args = typeof input.args === 'function' ? input.args(safeValue[property], ctx) : input.args;
 
         // if args function returned a falsey value, skip this input
-        if (!args || args.exclude(safeValue[property], ctx)) {
+        if (!args || (typeof args.exclude === 'function' && args.exclude(safeValue[property], ctx))) {
             continue;
         }
 
