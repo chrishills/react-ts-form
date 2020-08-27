@@ -120,7 +120,7 @@ function renderInputs<T, C>(
             element = (
                 <ArrayWrapper 
                     array={args.array} 
-                    arrayItemTemplate={meta.arrayItemTemplate}
+                    arrayItemTemplate={meta.ArrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
                     renderInput={(itemValue, itemOnChange, index) => renderInput(meta, context, root, itemValue, itemOnChange, args, id ? `${id}_${index}` : undefined)}
@@ -137,7 +137,7 @@ function renderInputs<T, C>(
         }
 
         // wrap with input template
-        element = React.createElement(meta.inputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property}, element);
+        element = React.createElement(meta.InputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property}, element);
 
         if (args.fieldset) {
             let fieldsetWrapper = elements.find(e => e.fieldset && e.fieldset.name === args.fieldset);
@@ -154,7 +154,7 @@ function renderInputs<T, C>(
 
     return elements.reduce((a, c) => {
         if (c.fieldset) {
-            a.push(React.createElement(meta.fieldsetTemplate, {...c.fieldset, key: `fieldset.${c.fieldset.name}`}, c.elements));
+            a.push(React.createElement(meta.FieldsetTemplate, {...c.fieldset, key: `fieldset.${c.fieldset.name}`}, c.elements));
             return a;
         }
         return a.concat(c.elements);

@@ -20,7 +20,7 @@ export interface IArrayItemTemplateProps {
 export type IFieldsetTemplate = React.PropsWithChildren<IFieldset>;
 
 export interface IFormMeta {
-  inputTemplate: React.ComponentType<IInputTemplateProps>;
-  arrayItemTemplate: React.ComponentType<IArrayItemTemplateProps>;
-  fieldsetTemplate: React.ComponentType<IFieldsetTemplate>;
+  InputTemplate: React.ComponentType<IInputTemplateProps>;
+  ArrayItemTemplate: React.ComponentType<IArrayItemTemplateProps>;
+  FieldsetTemplate: React.ComponentType<IFieldsetTemplate>;
 }
