@@ -3,9 +3,19 @@ import IFieldset from "./IFieldset";
 
 export default function Fieldsets(fieldsets: IFieldset[]) {
   return (clazz: any) => {
-    if (!clazz[META_KEY]) {
-      clazz[META_KEY] = {};
+    if (!fieldsets?.length) {
+      return;
     }
-    clazz[META_KEY].fieldsets = fieldsets;
+    let meta = clazz[META_KEY];
+    if (!meta) {
+      meta = {};
+      clazz[META_KEY] = meta;
+    }
+    let arr: IFieldset[] = meta.fieldsets;
+    if (!arr) {
+      arr = [];
+      meta.fieldset = arr;
+    }
+    arr.push(...fieldsets);
   }
 }

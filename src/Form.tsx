@@ -8,6 +8,7 @@ import IFieldset from "./fieldset/IFieldset";
 import IInputArgs from "./input/IInputArgs";
 import ArrayWrapper from "./ArrayWrapper";
 import { META_KEY } from "./util/Constants";
+import getFormSchema from "./util/getFormSchema";
 
 interface IFormProps<T = any, C = any> extends IControlledProps<T> {
 
@@ -79,8 +80,19 @@ function renderInputs<T, C>(
 
     if (!inputs && clazz) {
         const instance = new clazz();
-        inputs = instance[META_KEY] && instance[META_KEY].inputs || [];
-        fieldsets = instance[META_KEY] && instance[META_KEY].fieldsets || [];
+        const schema = getFormSchema(instance);
+        fieldsets = schema.fieldsets;
+        inputs = [];
+        if (schema.inputs) {
+            let ctor = instance.constructor;
+            while (ctor) {
+                const arr = schema.inputs.get(ctor.prototype);
+                if (arr?.length) {
+                    inputs = inputs.concat(arr);
+                }
+                ctor = Object.getPrototypeOf(ctor);
+            }
+        }
     }
 
     if (!inputs || !inputs.length) {
