@@ -4,10 +4,8 @@ import Class from "./util/Class";
 import IInput from "./input/IInput";
 import { IControlledProps } from "./input/IControlledProps";
 import { IFormMeta } from "./form/IFormMeta";
-import IFieldset from "./fieldset/IFieldset";
 import IInputArgs from "./input/IInputArgs";
 import ArrayWrapper from "./ArrayWrapper";
-import { META_KEY } from "./util/Constants";
 import getFormSchema from "./util/getFormSchema";
 
 interface IFormProps<T = any, C = any> extends IControlledProps<T> {
@@ -76,7 +74,7 @@ function renderInputs<T, C>(
 ) {
 
     // todo support with non-decorator format
-    let fieldsets: IFieldset[];
+    let fieldsets: { [name: string]: React.ReactNode; };
 
     if (!inputs && clazz) {
         const instance = new clazz();
@@ -88,7 +86,7 @@ function renderInputs<T, C>(
             while (ctor) {
                 const arr = schema.inputs.get(ctor.prototype);
                 if (arr?.length) {
-                    inputs = inputs.concat(arr);
+                    inputs = [...arr, ...inputs];
                 }
                 ctor = Object.getPrototypeOf(ctor);
             }
@@ -99,8 +97,12 @@ function renderInputs<T, C>(
         return null;
     }
 
+    if (!fieldsets) {
+        fieldsets = {};
+    }
+
     const rendered: string[] = [];
-    const elements: ({ fieldset?: IFieldset; elements: React.ReactNodeArray })[] = [];
+    const elements: ({ fieldset?: string; elements: React.ReactNodeArray })[] = [];
     const safeValue = value || {};
     const ctx = { context, parent: safeValue, root };
 
@@ -152,10 +154,9 @@ function renderInputs<T, C>(
         element = React.createElement(meta.InputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property}, element);
 
         if (args.fieldset) {
-            let fieldsetWrapper = elements.find(e => e.fieldset && e.fieldset.name === args.fieldset);
+            let fieldsetWrapper = elements.find(e => e.fieldset === args.fieldset);
             if (!fieldsetWrapper) {
-                const fs = fieldsets.find(s => s.name === args.fieldset);
-                elements.push(fieldsetWrapper = { fieldset: fs || { name: args.fieldset, title: args.fieldset }, elements: [] });
+                elements.push(fieldsetWrapper = { fieldset: args.fieldset, elements: [] });
             }
             fieldsetWrapper.elements.push(element);
             continue;
@@ -166,7 +167,7 @@ function renderInputs<T, C>(
 
     return elements.reduce((a, c) => {
         if (c.fieldset) {
-            a.push(React.createElement(meta.FieldsetTemplate, {...c.fieldset, key: `fieldset.${c.fieldset.name}`}, c.elements));
+            a.push(React.createElement(meta.FieldsetTemplate, {name: c.fieldset, title: fieldsets[c.fieldset] || c.fieldset, key: `fieldset.${c.fieldset}`}, c.elements));
             return a;
         }
         return a.concat(c.elements);

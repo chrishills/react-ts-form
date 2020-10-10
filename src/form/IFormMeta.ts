@@ -1,5 +1,4 @@
 import IInputMeta from "../input/IInputMeta";
-import IFieldset from "../fieldset/IFieldset";
 
 // tslint:disable-next-line:no-empty-interface
 export interface IInputTemplateProps extends IInputMeta {
@@ -17,7 +16,7 @@ export interface IArrayItemTemplateProps {
   children?: React.ReactNode
 }
 
-export type IFieldsetTemplate = React.PropsWithChildren<IFieldset>;
+export type IFieldsetTemplate = React.PropsWithChildren<{ name: string; title: React.ReactNode; }>;
 
 export interface IFormMeta {
   InputTemplate: React.ComponentType<IInputTemplateProps>;
