@@ -37,15 +37,18 @@ interface IFormProps<T = any, C = any> extends IControlledProps<T> {
 
 }
 
-function renderInput<T, C>(
-    meta: IFormMeta,
-    context: C,
-    rootValue: T, // root value
-    value: any,
-    onChange: (value: any) => void,
-    args: IInputArgs<any>,
-    id?: string
-) {
+interface InputRenderArgs<T, C> {
+    meta: IFormMeta;
+    context: C;
+    rootValue: T;
+    value: any;
+    onChange(value: any): void;
+    args: IInputArgs<any>;
+    id?: string;
+    path: string;
+}
+
+function renderInput<T, C>({ meta, context, rootValue, value, onChange, args, id }: InputRenderArgs<T, C>) {
     
     let element = null;
 
@@ -56,22 +59,25 @@ function renderInput<T, C>(
 
     // nested object form
     if (!element) {
-        element = renderInputs(meta, context, rootValue, value, onChange, args.inputs, args.clazz, id);
+        element = renderInputs({ meta, context, root: rootValue, value, onChange, inputs: args.inputs, clazz: args.clazz, idPrefix: id });
     }
 
     return element;
 }
 
-function renderInputs<T, C>(
-    meta: IFormMeta, // templates
-    context: C, // context value
-    root: T, // root form value
-    value: any, // object value
-    onChange: (value: any) => void,
-    inputs?: (IInput<any>)[],
-    clazz?: Class<any>,
-    idPrefix?: string
-) {
+interface InputsRenderArgs<T, C> {
+    meta: IFormMeta; // templates
+    context: C; // context value
+    root: T; // root form value
+    value: any; // object value
+    onChange: (value: any) => void;
+    inputs?: (IInput<any>)[];
+    clazz?: Class<any>;
+    idPrefix?: string;
+    path?: string;
+}
+
+function renderInputs<T, C>({ meta, context, root, value, onChange, inputs, clazz, idPrefix, path }: InputsRenderArgs<T, C>) {
 
     // todo support with non-decorator format
     let fieldsets: { [name: string]: React.ReactNode; };
@@ -129,6 +135,8 @@ function renderInputs<T, C>(
         const id = idPrefix ? `${idPrefix}_${property}` : undefined;
 
         let element = null;
+
+        const subpath = path ? path + "." + property : property;
         
         if (args.array) {
             element = (
@@ -137,11 +145,32 @@ function renderInputs<T, C>(
                     arrayItemTemplate={meta.ArrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
-                    renderInput={(itemValue, itemOnChange, index) => renderInput(meta, context, root, itemValue, itemOnChange, args, id ? `${id}_${index}` : undefined)}
+                    renderInput={(itemValue, itemOnChange, index) => {
+                        return renderInput({
+                            meta, 
+                            context, 
+                            rootValue: root, 
+                            value: itemValue, 
+                            onChange: itemOnChange, 
+                            args, 
+                            id: id ? `${id}_${index}` : undefined,
+                            path: subpath + "[" + index + "]",
+                        });
+                    }}
                 />
             );
         } else {
-            element = renderInput(meta, context, root, safeValue[property], handleChange, args, id);
+            element = renderInput({ 
+                meta, 
+                context, 
+                rootValue: 
+                root, 
+                value: safeValue[property], 
+                onChange: handleChange, 
+                args, 
+                id,
+                path: subpath,
+            });
         }
 
         rendered.push(property);
@@ -180,7 +209,7 @@ export default function Form<T = any, C = any>(props: IFormProps<T, C>) {
 
     return (
         <React.Fragment>
-            {renderInputs(meta, context, value, value, onChange, inputs, clazz, idPrefix)}
+            {renderInputs({ meta, context, root: value, value, onChange, inputs, clazz, idPrefix })}
         </React.Fragment>
     );
 }

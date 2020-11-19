@@ -9,4 +9,6 @@ export default interface IInputProps<T> extends IInputMeta, IControlledProps<T> 
      * auto-generated id for associating input with label
      */
     id?: string;
+
+    path?: string;
 }
