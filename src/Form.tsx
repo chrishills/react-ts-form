@@ -48,18 +48,18 @@ interface InputRenderArgs<T, C> {
     path: string;
 }
 
-function renderInput<T, C>({ meta, context, rootValue, value, onChange, args, id }: InputRenderArgs<T, C>) {
+function renderInput<T, C>({ meta, context, rootValue, value, onChange, args, id, path }: InputRenderArgs<T, C>) {
     
     let element = null;
 
     // input component
     if (args.component) {
-        element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value});
+        element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path});
     }
 
     // nested object form
     if (!element) {
-        element = renderInputs({ meta, context, root: rootValue, value, onChange, inputs: args.inputs, clazz: args.clazz, idPrefix: id });
+        element = renderInputs({ meta, context, root: rootValue, value, onChange, inputs: args.inputs, clazz: args.clazz, idPrefix: id, path});
     }
 
     return element;
