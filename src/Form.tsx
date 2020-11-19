@@ -180,7 +180,7 @@ function renderInputs<T, C>({ meta, context, root, value, onChange, inputs, claz
         }
 
         // wrap with input template
-        element = React.createElement(meta.InputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property}, element);
+        element = React.createElement(meta.InputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property, path: subpath}, element);
 
         if (args.fieldset) {
             let fieldsetWrapper = elements.find(e => e.fieldset === args.fieldset);

@@ -4,6 +4,7 @@ import IInputMeta from "../input/IInputMeta";
 export interface IInputTemplateProps extends IInputMeta {
   children?: React.ReactChild
   labelFor?: string;
+  path: string;
 }
 
 export interface IArrayItemTemplateProps {
