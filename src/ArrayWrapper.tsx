@@ -10,6 +10,7 @@ interface IArrayWrapperProps<T> extends IControlledProps<T[]> {
     array: IInputArrayMeta<T>;
     arrayItemTemplate: React.ComponentType<IArrayItemTemplateProps>;
     renderInput(value: T, onChange: (value: T) => void, index: number): React.ReactNode;
+    path: string;
 }
 
 interface IArrayWrapperState<T> {
@@ -31,7 +32,7 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
     }
 
     public render(){
-        const { array, arrayItemTemplate, renderInput } = this.props;
+        const { array, arrayItemTemplate, path, renderInput } = this.props;
 
         const retval = [];
 
@@ -51,7 +52,8 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
                     sortUp: this.getSortHandler(index, canSortUp ? index - 1 : 0),
                     sortDown: this.getSortHandler(index, canSortDown ? index + 1 : arr.length - 1),
                     index,
-                    key
+                    key,
+                    path
                 },
                 renderInput(value, this.getChangeHandler(key), index)
             ));

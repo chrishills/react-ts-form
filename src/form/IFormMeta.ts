@@ -16,6 +16,7 @@ export interface IArrayItemTemplateProps {
   remove: () => void;
   move: (targetIndex: number) => void;
   index: number;
+  path: string;
   children?: React.ReactNode
 }
 

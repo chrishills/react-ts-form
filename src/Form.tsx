@@ -145,6 +145,7 @@ function renderInputs<T, C>({ meta, context, root, value, onChange, inputs, claz
                     arrayItemTemplate={meta.ArrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
+                    path={subpath}
                     renderInput={(itemValue, itemOnChange, index) => {
                         return renderInput({
                             meta, 
