@@ -1,5 +1,5 @@
 
-interface IAddComponentProps<T> {
+export interface IAddComponentProps<T> {
   readonly values: T[];
   onAdd: (newValues: T[]) => void;
 }
