@@ -14,6 +14,8 @@ export interface IArrayItemTemplateProps {
   sortUp: () => void;
   sortDown: () => void;
   remove: () => void;
+  move: (targetIndex: number) => void;
+  index: number;
   children?: React.ReactNode
 }
 

@@ -35,10 +35,10 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
 
         const retval = [];
 
-        this.state.keyed.forEach(({key, value}, i, arr) => {
+        this.state.keyed.forEach(({key, value}, index, arr) => {
 
-            const canSortUp = array.sort && i > 0;
-            const canSortDown = array.sort && i < arr.length - 1;
+            const canSortUp = array.sort && index > 0;
+            const canSortDown = array.sort && index < arr.length - 1;
 
             retval.push(React.createElement(
                 arrayItemTemplate,
@@ -47,11 +47,13 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
                     canSortDown,
                     canRemove: array.remove,
                     remove: this.getRemoveHandler(key),
-                    sortUp: this.getSortHandler(i, canSortUp ? i - 1 : 0),
-                    sortDown: this.getSortHandler(i, canSortDown ? i + 1 : arr.length - 1),
+                    move: this.getMoveHandler(index),
+                    sortUp: this.getSortHandler(index, canSortUp ? index - 1 : 0),
+                    sortDown: this.getSortHandler(index, canSortDown ? index + 1 : arr.length - 1),
+                    index,
                     key
                 },
-                renderInput(value, this.getChangeHandler(key), i)
+                renderInput(value, this.getChangeHandler(key), index)
             ));
         });
 
@@ -85,6 +87,10 @@ export default class ArrayWrapper<T> extends React.Component<IArrayWrapperProps<
 
     private getRemoveHandler = (key: React.Key) => () => {
         this.handleChange(this.state.keyed.filter(kv => kv.key !== key));
+    }
+
+    private getMoveHandler = (index: number) => (targetIndex: number) => {
+        this.handleChange(arrayMove([...this.state.keyed], index, targetIndex));
     }
 
     private getChangeHandler = (key: React.Key) => (value: any) => {
