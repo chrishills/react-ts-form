@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import Class from "./util/Class";
-import IInput from "./input/IInput";
+import IInputMapping from "./input/IInputMapping";
 import { IControlledProps } from "./input/IControlledProps";
 import { IFormMeta } from "./form/IFormMeta";
 import IInputArgs from "./input/IInputArgs";
@@ -23,7 +23,7 @@ interface IFormProps<T = any, C = any> extends IControlledProps<T> {
     /**
      * specify list of 
      */
-    inputs?: (IInput<any>)[];
+    inputs?: (IInputMapping<any>)[];
 
     /**
      * template components
@@ -52,8 +52,12 @@ function renderInput<T, C>({ meta, context, rootValue, value, onChange, args, id
     
     let element = null;
 
+    if (args.use) {
+        element = React.createElement(args.use.Component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path});
+    }
+
     // input component
-    if (args.component) {
+    if (!element && args.component) {
         element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path});
     }
 
@@ -71,7 +75,7 @@ interface InputsRenderArgs<T, C> {
     root: T; // root form value
     value: any; // object value
     onChange: (value: any) => void;
-    inputs?: (IInput<any>)[];
+    inputs?: (IInputMapping<any>)[];
     clazz?: Class<any>;
     idPrefix?: string;
     path?: string;
@@ -142,7 +146,7 @@ function renderInputs<T, C>({ meta, context, root, value, onChange, inputs, claz
             element = (
                 <ArrayWrapper 
                     array={args.array} 
-                    arrayItemTemplate={meta.ArrayItemTemplate}
+                    arrayItemTemplate={args.ArrayItemTemplate || (args.use?.ArrayItemTemplate) || meta.ArrayItemTemplate}
                     value={safeValue[property]}
                     onChange={handleChange}
                     path={subpath}
@@ -181,7 +185,8 @@ function renderInputs<T, C>({ meta, context, root, value, onChange, inputs, claz
         }
 
         // wrap with input template
-        element = React.createElement(meta.InputTemplate, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property, path: subpath}, element);
+        const template = args.InputTemplate || (args.use?.InputTemplate) || meta.InputTemplate;
+        element = React.createElement(template, {...args.meta || {}, labelFor: !args.array ? id : undefined, key: property, path: subpath}, element);
 
         if (args.fieldset) {
             let fieldsetWrapper = elements.find(e => e.fieldset === args.fieldset);

@@ -4,4 +4,5 @@ export { default as Fieldsets } from "./fieldset/Fieldsets";
 export { default as Form }from "./Form";
 export { default as IInputProps } from "./input/IInputProps";
 export { default as IInputArrayMeta, IAddComponentProps } from "./input/IInputArrayMeta";
+export { IInputType, InputType } from "./input/InputType";
 export { IFormMeta, IInputTemplateProps, IArrayItemTemplateProps, IFieldsetTemplate } from "./form/IFormMeta";
