@@ -53,12 +53,12 @@ function renderInput<T, C>({ meta, context, rootValue, value, onChange, args, id
     let element = null;
 
     if (args.use) {
-        element = React.createElement(args.use.Component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path});
+        element = React.createElement(args.use.Component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path, context});
     }
 
     // input component
     if (!element && args.component) {
-        element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path});
+        element = React.createElement(args.component, {...args.meta || {}, ...args.inputProps || {}, id, onChange, value, path, context});
     }
 
     // nested object form

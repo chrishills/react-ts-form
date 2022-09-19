@@ -11,4 +11,6 @@ export default interface IInputProps<T> extends IInputMeta, IControlledProps<T> 
     id?: string;
 
     path?: string;
+
+    context?: any;
 }
